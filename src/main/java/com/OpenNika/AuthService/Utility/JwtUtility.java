@@ -11,6 +11,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 @Component
+
 public class JwtUtility {
     
      private static final String SECRET_KEY =
