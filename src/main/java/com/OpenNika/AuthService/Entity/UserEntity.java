@@ -1,5 +1,7 @@
 package com.OpenNika.AuthService.Entity;
 
+import com.OpenNika.AuthService.Dto.Role;
+
 import jakarta.persistence.*;
 
 
@@ -17,6 +19,8 @@ public class UserEntity {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private Role role;
     // Getters and setters
     public Long getId() {
         return id;
@@ -40,6 +44,14 @@ public class UserEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }       
+
+    public void setRole(Role role) {
+        this.role = role;
     }
     
 }

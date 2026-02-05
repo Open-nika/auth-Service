@@ -53,11 +53,19 @@ public class AuthController {
         return "User registered successfully";
     }
 
-    @GetMapping("/protected/profile")
-    public ResponseEntity<String> profile(HttpServletRequest request) {
+   @GetMapping("/user/profile")
+    public String userProfile(HttpServletRequest request) {
         String userId = (String) request.getAttribute("userId");
-        return ResponseEntity.ok("Hello " + userId);
+        return "Profile of " + userId;
     }
+
+    @GetMapping("/admin/dashboard")
+    public String adminDashboard() {
+        return "Admin dashboard";
+    }
+
+
+
 
 
 }

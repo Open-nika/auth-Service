@@ -26,6 +26,7 @@ public class AuthService {
         user.setUserID(request.getUserID());
         String hashedPassword = passwordEncoder.encode(request.getPassword());
         user.setPassword(hashedPassword);
+        user.setRole(request.getRole());
         authRepository.save(user);
 
         System.out.println("Registering user: " + user.getUserID());
@@ -46,11 +47,11 @@ public class AuthService {
             request.getPassword(),     // raw password
             user.getPassword()         // hashed password from DB
             );
-
+          boolean roleauthenticated = user.getRole() == request.getRole();  
         JwtResponse token = null;
-        if (user != null && matches) {
-            System.out.println("Login successful for user: " + request.getUserID());
-             token=new JwtResponse(jwtUtility.generateToken(request.getUserID()));
+        if (user != null && matches && roleauthenticated) {
+            System.out.println("Login successful for user: " + request.getUserID() + " with role: " + request.getRole());
+             token=new JwtResponse(jwtUtility.generateToken(request.getUserID(), user.getRole()));
         } 
         else {
              token=new JwtResponse("Invalid credentials");  
