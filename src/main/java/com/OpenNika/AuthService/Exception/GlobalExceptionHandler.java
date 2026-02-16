@@ -5,24 +5,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.OpenNika.AuthService.Dto.ApiResponse;
 import com.OpenNika.AuthService.Dto.ErrorResponse;
 
 @ControllerAdvice
 public class GlobalExceptionHandler  {
     
     @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(),HttpStatus.UNAUTHORIZED.value());
+    public ResponseEntity<ApiResponse<?>> handleUnauthorizedException(UnauthorizedException ex) {
+        ApiResponse<?> errorResponse = new ApiResponse(false, ex.getMessage(), null);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
-        ErrorResponse error = new ErrorResponse(
-                "Internal server error",
-                HttpStatus.INTERNAL_SERVER_ERROR.value()
-        );
-        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<ApiResponse<?>> handleGeneric(Exception ex) {
+        ApiResponse<?> errorResponse = new ApiResponse(false, "Internal server error", null);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 
 }

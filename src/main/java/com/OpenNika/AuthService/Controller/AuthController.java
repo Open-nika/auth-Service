@@ -4,16 +4,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.OpenNika.AuthService.Dto.ApiResponse;
 import com.OpenNika.AuthService.Dto.AuthRequest;
 import com.OpenNika.AuthService.Dto.JwtResponse;
 import com.OpenNika.AuthService.Service.AuthService;
 import com.OpenNika.AuthService.Utility.JwtUtility;
 
-import io.jsonwebtoken.Jwt;
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
@@ -22,16 +21,15 @@ import jakarta.servlet.http.HttpServletRequest;
 public class AuthController {
 
     private final AuthService authService;
-    private final JwtUtility jwtUtility;
     public AuthController(AuthService authService, JwtUtility jwtUtility) {
         this.authService = authService;
-        this.jwtUtility = jwtUtility;
     }
 
     @GetMapping("/public/login")
-    public JwtResponse login(@RequestBody AuthRequest request){
+    public ResponseEntity<ApiResponse<JwtResponse>> login(@RequestBody AuthRequest request){
         JwtResponse token = authService.login(request);
-        return token;
+        ApiResponse<JwtResponse> response = new ApiResponse<>(true, "Login successful", token);
+        return ResponseEntity.ok(response);
     }
 
     // @GetMapping("/users")
@@ -48,20 +46,23 @@ public class AuthController {
 
 
     @PostMapping("/public/register")
-    public String registerUser(@RequestBody AuthRequest request) {
+    public ResponseEntity<ApiResponse<String>> registerUser(@RequestBody AuthRequest request) {
         authService.registerUser(request);
-        return "User registered successfully";
+        ApiResponse<String> response = new ApiResponse<>(true, "User registered successfully", null);
+        return ResponseEntity.ok(response);
     }
 
    @GetMapping("/user/profile")
-    public String userProfile(HttpServletRequest request) {
+    public ResponseEntity<ApiResponse<String>> userProfile(HttpServletRequest request) {
         String userId = (String) request.getAttribute("userId");
-        return "Profile of " + userId;
+        ApiResponse<String> response = new ApiResponse<>(true, "User profile retrieved", "Profile of " + userId);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/admin/dashboard")
-    public String adminDashboard() {
-        return "Admin dashboard";
+    public ResponseEntity<ApiResponse<String>> adminDashboard() {
+        ApiResponse<String> response = new ApiResponse<>(true, "Admin dashboard accessed", "Admin dashboard content");
+        return ResponseEntity.ok(response);
     }
 
 
