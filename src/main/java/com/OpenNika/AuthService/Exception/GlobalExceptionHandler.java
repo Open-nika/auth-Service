@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.OpenNika.AuthService.Dto.ApiResponse;
-import com.OpenNika.AuthService.Dto.ErrorResponse;
 
 @ControllerAdvice
 public class GlobalExceptionHandler  {

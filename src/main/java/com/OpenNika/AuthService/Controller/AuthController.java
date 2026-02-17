@@ -1,6 +1,9 @@
 package com.OpenNika.AuthService.Controller;
 
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +16,6 @@ import com.OpenNika.AuthService.Dto.JwtResponse;
 import com.OpenNika.AuthService.Service.AuthService;
 import com.OpenNika.AuthService.Utility.JwtUtility;
 
-import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -53,17 +55,20 @@ public class AuthController {
     }
 
    @GetMapping("/user/profile")
-    public ResponseEntity<ApiResponse<String>> userProfile(HttpServletRequest request) {
-        String userId = (String) request.getAttribute("userId");
+    public ResponseEntity<ApiResponse<String>> userProfile(Authentication authentication) {
+        String userId = authentication.getName();
         ApiResponse<String> response = new ApiResponse<>(true, "User profile retrieved", "Profile of " + userId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/admin/dashboard")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<String>> adminDashboard() {
         ApiResponse<String> response = new ApiResponse<>(true, "Admin dashboard accessed", "Admin dashboard content");
         return ResponseEntity.ok(response);
     }
+
+    
 
 
 
