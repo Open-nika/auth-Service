@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.OpenNika.AuthService.Dto.AuthRequest;
 import com.OpenNika.AuthService.Dto.JwtResponse;
+import com.OpenNika.AuthService.Entity.RefreshToken;
 import com.OpenNika.AuthService.Entity.UserEntity;
 import com.OpenNika.AuthService.Repository.AuthRepository;
 import com.OpenNika.AuthService.Utility.JwtUtility;
@@ -14,10 +15,12 @@ public class AuthService {
     
     private final PasswordEncoder passwordEncoder;
     private AuthRepository authRepository;
+    private final RefreshTokenService refreshTokenService;
     private final JwtUtility jwtUtility = new com.OpenNika.AuthService.Utility.JwtUtility();
-    AuthService(AuthRepository authRepository, PasswordEncoder passwordEncoder) {
+    AuthService(AuthRepository authRepository, PasswordEncoder passwordEncoder, RefreshTokenService refreshTokenService) {
         this.authRepository = authRepository;
         this.passwordEncoder = passwordEncoder;
+        this.refreshTokenService = refreshTokenService;
     }
 
     public void registerUser(com.OpenNika.AuthService.Dto.AuthRequest request) {
@@ -48,17 +51,20 @@ public class AuthService {
             user.getPassword()         // hashed password from DB
             );
           boolean roleauthenticated = user.getRole() == request.getRole();  
-        JwtResponse token = null;
-        if (user != null && matches && roleauthenticated) {
-            System.out.println("Login successful for user: " + request.getUserID() + " with role: " + request.getRole());
-             token=new JwtResponse(jwtUtility.generateToken(request.getUserID(), user.getRole()));
-        } 
-        else {
-             token=new JwtResponse("Invalid credentials");  
-        }    
-        
+            String accessToken = jwtUtility.generateToken(user.getUserID(), user.getRole());
+            RefreshToken refreshToken =refreshTokenService.createRefreshToken(Long.valueOf()user.getUserID()));
 
-        return token; 
+            if( !(matches && roleauthenticated) ) {
+                throw new RuntimeException("Invalid credentials or role");
+            }
+         
+         
+            return new JwtResponse(accessToken, refreshToken.getToken());
+
+    }
+
+
+
         
     }
 
