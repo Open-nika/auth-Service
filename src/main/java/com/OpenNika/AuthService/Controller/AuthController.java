@@ -1,6 +1,8 @@
 package com.OpenNika.AuthService.Controller;
 
 
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -14,6 +16,7 @@ import com.OpenNika.AuthService.Dto.ApiResponse;
 import com.OpenNika.AuthService.Dto.AuthRequest;
 import com.OpenNika.AuthService.Dto.JwtResponse;
 import com.OpenNika.AuthService.Service.AuthService;
+import com.OpenNika.AuthService.Service.RefreshTokenService;
 import com.OpenNika.AuthService.Utility.JwtUtility;
 
 
@@ -23,8 +26,13 @@ import com.OpenNika.AuthService.Utility.JwtUtility;
 public class AuthController {
 
     private final AuthService authService;
-    public AuthController(AuthService authService, JwtUtility jwtUtility) {
+    private final JwtUtility jwtUtility;
+    private final RefreshTokenService refreshTokenService;
+
+    public AuthController(AuthService authService, JwtUtility jwtUtility, RefreshTokenService refreshTokenService) {
         this.authService = authService;
+        this.jwtUtility = jwtUtility;
+        this.refreshTokenService = refreshTokenService;
     }
 
     @GetMapping("/public/login")
@@ -68,6 +76,14 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    
+    @PostMapping("/refresh-token")
+    public ResponseEntity<ApiResponse<JwtResponse>> refreshToken(@RequestBody Map <String,String> refreshToken){
+        String token = refreshToken.get("refreshToken");
+        JwtResponse newToken = refreshTokenService.refreshAccessToken(token);
+
+        return ResponseEntity.ok(new ApiResponse<>(true, "Token refreshed successfully", newToken));
+    }
     
 
 
