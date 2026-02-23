@@ -80,8 +80,8 @@ public class AuthController {
     @PostMapping("/refresh-token")
     public ResponseEntity<ApiResponse<JwtResponse>> refreshToken(@RequestBody Map <String,String> refreshToken){
         String token = refreshToken.get("refreshToken");
-        JwtResponse newToken = refreshTokenService.refreshAccessToken(token);
-
+        JwtResponse newToken = refreshTokenService.refresh(token);
+        System.out.println("New token generated: " + newToken.getAccessToken());
         return ResponseEntity.ok(new ApiResponse<>(true, "Token refreshed successfully", newToken));
     }
     

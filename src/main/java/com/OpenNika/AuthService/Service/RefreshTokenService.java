@@ -31,10 +31,10 @@ public class RefreshTokenService {
         this.jwtUtility = jwtUtility;
     }
 
-    public RefreshToken createRefreshToken(Long userId) {
+    public RefreshToken createRefreshToken(String userId) {
         
-        UserEntity user = authRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
-        refreshTokenRepository.deleteByUserId(Long.valueOf(user.getUserID()));
+        UserEntity user = authRepository.findByUserID(userId);
+        refreshTokenRepository.deleteByUserId(user.getUserID());
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setUser(user);
         refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));
@@ -66,7 +66,7 @@ public class RefreshTokenService {
         refreshTokenRepository.delete(refreshToken);
 
         RefreshToken newRefreshToken =
-                createRefreshToken(Long.valueOf(user.getUserID()));
+                createRefreshToken(user.getUserID());
 
         String newAccessToken =
                 jwtUtility.generateToken(user.getUserID(), user.getRole());

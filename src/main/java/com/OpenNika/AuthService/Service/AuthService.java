@@ -52,7 +52,7 @@ public class AuthService {
             );
           boolean roleauthenticated = user.getRole() == request.getRole();  
             String accessToken = jwtUtility.generateToken(user.getUserID(), user.getRole());
-            RefreshToken refreshToken =refreshTokenService.createRefreshToken(Long.valueOf()user.getUserID()));
+            RefreshToken refreshToken =refreshTokenService.createRefreshToken(user.getUserID());
 
             if( !(matches && roleauthenticated) ) {
                 throw new RuntimeException("Invalid credentials or role");
@@ -68,4 +68,4 @@ public class AuthService {
         
     }
 
-}
+

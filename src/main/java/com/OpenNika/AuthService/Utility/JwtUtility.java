@@ -14,12 +14,14 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtUtility {
 
-    @Value("${jwt.secret}")
-    private String secret;
+    
+    private String secret="thisIsASecretKeyThatIsAtLeast32BytesLongForHS256";
 
     @Value("${jwt.access.expiration}")
     private long accessTokenExpiration;
 
+
+    
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
