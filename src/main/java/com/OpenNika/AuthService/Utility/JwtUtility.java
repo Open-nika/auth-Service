@@ -17,8 +17,8 @@ public class JwtUtility {
     
     private String secret="thisIsASecretKeyThatIsAtLeast32BytesLongForHS256";
 
-    @Value("${jwt.access.expiration}")
-    private long accessTokenExpiration;
+   
+    private long accessTokenExpiration=3600000; // 1 hour
 
 
     

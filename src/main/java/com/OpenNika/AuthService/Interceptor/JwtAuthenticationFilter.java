@@ -20,6 +20,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtUtility jwtUtility;
 
     public JwtAuthenticationFilter(JwtUtility jwtUtility) {
+        
         this.jwtUtility = jwtUtility;
     }
 
@@ -33,14 +34,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 
         String token = authHeader;
-
+            
+        System.out.println("Token received: " + token);
+        
             if (jwtUtility.validateToken(token)) {
-
+            
                 String userId = jwtUtility.extractUserId(token);
                 String role = jwtUtility.extractRole(token).name();
+                System.out.println("Extracted role: " + role);
+                System.out.println("Setting authority: ROLE_" + role);
 
                 var authority = new SimpleGrantedAuthority("ROLE_" + role);
-
+                System.out.println("Authority set: " + authority.getAuthority());
                 var authentication = new UsernamePasswordAuthenticationToken(
                         userId,
                         null,
@@ -49,7 +54,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        
+
+            
 
         filterChain.doFilter(request, response);
     }

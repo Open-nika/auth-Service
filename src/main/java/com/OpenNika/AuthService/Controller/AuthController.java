@@ -71,7 +71,10 @@ public class AuthController {
 
     @GetMapping("/admin/dashboard")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<String>> adminDashboard() {
+    public ResponseEntity<ApiResponse<String>> adminDashboard(Authentication authentication) {
+         System.out.println("Principal: " + authentication.getName());
+    System.out.println("Authorities: " + authentication.getAuthorities());
+
         ApiResponse<String> response = new ApiResponse<>(true, "Admin dashboard accessed", "Admin dashboard content");
         return ResponseEntity.ok(response);
     }

@@ -34,7 +34,7 @@ public class RefreshTokenService {
     public RefreshToken createRefreshToken(String userId) {
         
         UserEntity user = authRepository.findByUserID(userId);
-        refreshTokenRepository.deleteByUserId(user.getUserID());
+        refreshTokenRepository.deleteByUser(user);
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setUser(user);
         refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));

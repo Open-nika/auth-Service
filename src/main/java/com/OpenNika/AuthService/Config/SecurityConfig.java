@@ -24,15 +24,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         
-          http
-          .csrf(csrf->csrf.disable())
-          .sessionManagement(
-            session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth->auth
-                .requestMatchers("/api/auth/public/**").permitAll()
-                .requestMatchers("/api/auth/admin/**").permitAll()
-                .requestMatchers("/h2-console/**").permitAll()
-                .anyRequest().authenticated()
+         http
+         .csrf(csrf -> csrf.disable())
+         .sessionManagement(session ->
+         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+         .authorizeHttpRequests(auth -> auth
+         .requestMatchers("/api/auth/public/**").permitAll()
+         .requestMatchers("/api/auth/refresh-token/**").permitAll()
+         .requestMatchers("/h2-console/**").permitAll()
+         .anyRequest().authenticated()
+    
 
 
 
